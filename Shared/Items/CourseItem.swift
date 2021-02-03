@@ -1,13 +1,13 @@
 //
-//  ContentView.swift
-//  Shared
+//  CourseItem.swift
+//  WordRaclette
 //
-//  Created by Mudit Sharma on 31/01/21.
+//  Created by Mudit Sharma on 03/02/21.
 //
 
 import SwiftUI
 
-struct ContentView: View {
+struct CourseItem: View {
     var body: some View {
         VStack(alignment: .leading,spacing: 4) {
             Spacer()
@@ -32,8 +32,8 @@ struct ContentView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
+struct CourseItem_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        CourseItem()
     }
 }

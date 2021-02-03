@@ -11,7 +11,7 @@ import SwiftUI
 struct WordRacletteApp: App {
     var body: some Scene {
         WindowGroup {
-            SideBar()
+            ContentView()
         }
     }
 }

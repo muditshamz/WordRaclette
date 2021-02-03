@@ -8,14 +8,25 @@
 import SwiftUI
 
 struct SideBar: View {
+    @ViewBuilder
     var body: some View {
         NavigationView {
             #if os(iOS)
             SideBarContent
                 .navigationBarTitle("Learn")
+                .toolbar{
+                    ToolbarItem(placement: .navigationBarTrailing){
+                    Image(systemName: "person.crop.circle")
+                    }}
             #else
             SideBarContent
                 .frame(minWidth:200, idealWidth: 250,maxWidth: 300)
+                .toolbar{
+                    ToolbarItem(placement: .automatic ){
+                        Button (action: { }){
+                            Image(systemName: "person.crop.circle")
+                        }
+                    }}
             #endif
             //This courseview is for Ipad home screen
             CourseView()
