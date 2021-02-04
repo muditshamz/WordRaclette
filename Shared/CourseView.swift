@@ -26,7 +26,7 @@ struct CourseView: View {
                                 
                                 .onTapGesture {
                                     //This solves the problem of animation delay
-                                    withAnimation(.spring(response: 0.5, dampingFraction: 0.7, blendDuration: 0)) {
+                                    withAnimation(.spring(response: 0.5 , dampingFraction: 0.7, blendDuration: 0)) {
                                         ShowFullCard.toggle()
                                         selectedItem = item
                                         isDisabled = true
@@ -43,36 +43,43 @@ struct CourseView: View {
             }
             .zIndex(/*@START_MENU_TOKEN@*/1.0/*@END_MENU_TOKEN@*/)
             
+//       Full Screen
             if selectedItem != nil {
-                VStack {
-                    ScrollView {
-                        CourseItem(course: selectedItem!)
-                            .matchedGeometryEffect(id: selectedItem!.id, in: namespaceCard)
-                            .frame(height: 300)
-                            .onTapGesture {
-                                //This solves the problem of animation delay
-                                withAnimation(.spring()) {
-                                    ShowFullCard.toggle()
-                                    selectedItem = nil
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                        isDisabled = false
-                                    }
-                                    
+                ZStack (alignment: .topTrailing){
+                    VStack {
+                        ScrollView {
+                            CourseItem(course: selectedItem!)
+                                .matchedGeometryEffect(id: selectedItem!.id, in: namespaceCard)
+                                .frame(height: 300)
+                               
+                            
+                            VStack {
+                                ForEach(0 ..< 20) { item in
+                                    CourseRow()
                                 }
                             }
-                        
-                        VStack {
-                            ForEach(0 ..< 20) { item in
-                                CourseRow()
+                            .padding()
+                        }
+                    }
+                    .background(Color("Background 1"))
+                    .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
+                    .matchedGeometryEffect(id: "container\(selectedItem!.id)", in: namespaceCard)
+                    .edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
+                    
+                    
+                    CloseButton()
+                        .padding(.trailing,16)
+                        .onTapGesture {
+                            //This solves the problem of animation delay
+                            withAnimation(.spring()) {
+                                ShowFullCard.toggle()
+                                selectedItem = nil
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                    isDisabled = false
+                                }
                             }
                         }
-                        .padding()
-                    }
                 }
-                .background(Color("Background 1"))
-                .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
-                .matchedGeometryEffect(id: "container\(selectedItem!.id)", in: namespaceCard)
-                .edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
                 .zIndex(2)
             }
         }
