@@ -15,7 +15,8 @@ struct CourseView: View {
     var body: some View{
         ZStack {
             ScrollView(.horizontal) {
-                LazyHGrid(rows : Array(repeating: .init(.flexible( ),spacing : 16), count: 2),
+                LazyHGrid(
+                    rows : [GridItem(.adaptive(minimum: 160),spacing: 16) ],
                 spacing : 16 ) {
                     ForEach(courses) { item in
                         CourseItem(course: item)
