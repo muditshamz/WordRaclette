@@ -14,13 +14,13 @@ struct CourseView: View {
     @State var isDisabled = false
     var body: some View{
         ZStack {
-            ScrollView {
-                LazyVGrid(columns : Array(repeating: .init(.flexible( ),spacing : 16), count: 3),
+            ScrollView(.horizontal) {
+                LazyHGrid(rows : Array(repeating: .init(.flexible( ),spacing : 16), count: 2),
                 spacing : 16 ) {
                     ForEach(courses) { item in
                         CourseItem(course: item)
                             .matchedGeometryEffect(id: item.id, in: namespaceCard, isSource: !ShowFullCard)
-                            .frame( width: 200 ,height: 200, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                            .frame( width: 200 , alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                             
                             .onTapGesture {
                                 //This solves the problem of animation delay
@@ -37,6 +37,7 @@ struct CourseView: View {
                 .padding(16)
                 .frame(maxWidth: .infinity)
             }
+            .edgesIgnoringSafeArea(.all)
             
             if selectedItem != nil {
                 ScrollView {
