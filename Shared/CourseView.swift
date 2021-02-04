@@ -12,14 +12,23 @@ struct CourseView: View {
     @Namespace var namespaceCard
     var body: some View{
         ZStack {
-            CourseItem()
-                .matchedGeometryEffect(id: "Card", in: namespaceCard, isSource: !ShowFullCard)
-                .frame(width: 335, height: 250, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+            ScrollView {
+                VStack(spacing: 20.0) {
+                    
+                    ForEach(courses) { item in
+                        CourseItem(course: item)
+                            .matchedGeometryEffect(id: item.id, in: namespaceCard, isSource: !ShowFullCard)
+                            .frame(width: 335, height: 250, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                    }
+                   
+                }
+                .frame(maxWidth: .infinity)
+            }
             
             if ShowFullCard {
                 ScrollView {
                     CourseItem()
-                        .matchedGeometryEffect(id: "Card", in: namespaceCard)
+                        .matchedGeometryEffect(id: courses[0].id, in: namespaceCard)
                         .frame(height: 300)
                     
                     VStack {
@@ -29,7 +38,18 @@ struct CourseView: View {
                     }
                     .padding()
                 }
-                .transition(.opacity)
+                .background(Color("Background 1"))
+                .transition(
+                    .asymmetric(
+                        insertion:    AnyTransition
+                            .opacity
+                            .animation(Animation.spring()
+                                        .delay(0.3)),
+                        
+                        removal:    AnyTransition
+                            .opacity
+                            .animation(.spring()))
+                )
                 .edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
             }
         }
