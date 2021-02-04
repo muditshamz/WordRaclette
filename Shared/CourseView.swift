@@ -19,64 +19,61 @@ struct CourseView: View {
                     columns : [GridItem(.adaptive(minimum: 160),spacing: 16) ],
                 spacing : 16 ) {
                     ForEach(courses) { item in
-                        CourseItem(course: item)
-                            .matchedGeometryEffect(id: item.id, in: namespaceCard, isSource: !ShowFullCard)
-                            .frame(  height: 200  , alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                            
-                            .onTapGesture {
-                                //This solves the problem of animation delay
-                                withAnimation(.spring()) {
-                                    ShowFullCard.toggle()
-                                    selectedItem = item
-                                    isDisabled = true
+                        VStack {
+                            CourseItem(course: item)
+                                .matchedGeometryEffect(id: item.id, in: namespaceCard, isSource: !ShowFullCard)
+                                .frame(  height: 200  , alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                                
+                                .onTapGesture {
+                                    //This solves the problem of animation delay
+                                    withAnimation(.spring(response: 0.5, dampingFraction: 0.7, blendDuration: 0)) {
+                                        ShowFullCard.toggle()
+                                        selectedItem = item
+                                        isDisabled = true
+                                    }
                                 }
-                            }
-                            .disabled(isDisabled)
+                                .disabled(isDisabled)
+                        }
+                        .matchedGeometryEffect(id: "container\(item.id)", in: namespaceCard, isSource: !ShowFullCard)
                     }
                     
                 }
                 .padding(16)
                 .frame(maxWidth: .infinity)
             }
-            
+            .zIndex(/*@START_MENU_TOKEN@*/1.0/*@END_MENU_TOKEN@*/)
             
             if selectedItem != nil {
-                ScrollView {
-                    CourseItem(course: selectedItem!)
-                        .matchedGeometryEffect(id: selectedItem!.id, in: namespaceCard)
-                        .frame(height: 300)
-                        .onTapGesture {
-                            //This solves the problem of animation delay
-                            withAnimation(.spring()) {
-                                ShowFullCard.toggle()
-                                selectedItem = nil
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                    isDisabled = false
+                VStack {
+                    ScrollView {
+                        CourseItem(course: selectedItem!)
+                            .matchedGeometryEffect(id: selectedItem!.id, in: namespaceCard)
+                            .frame(height: 300)
+                            .onTapGesture {
+                                //This solves the problem of animation delay
+                                withAnimation(.spring()) {
+                                    ShowFullCard.toggle()
+                                    selectedItem = nil
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                        isDisabled = false
+                                    }
+                                    
                                 }
-                                
+                            }
+                        
+                        VStack {
+                            ForEach(0 ..< 20) { item in
+                                CourseRow()
                             }
                         }
-                    
-                    VStack {
-                        ForEach(0 ..< 20) { item in
-                            CourseRow()
-                        }
+                        .padding()
                     }
-                    .padding()
                 }
                 .background(Color("Background 1"))
-                .transition(
-                    .asymmetric(
-                        insertion:    AnyTransition
-                            .opacity
-                            .animation(Animation.spring()
-                                        .delay(0.3)),
-                        
-                        removal:    AnyTransition
-                            .opacity
-                            .animation(.spring()))
-                )
+                .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
+                .matchedGeometryEffect(id: "container\(selectedItem!.id)", in: namespaceCard)
                 .edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
+                .zIndex(2)
             }
         }
         //        .animation(.spring()) this delays the animation and back card get visible
