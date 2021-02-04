@@ -77,9 +77,9 @@
 			children = (
 				C25BEB1325C674A9007316DF /* WordRacletteApp.swift */,
 				C2A5609825CA62DB007FF176 /* Navigation */,
+				C29FBABF25CBEE8400E0D488 /* Model */,
 				C2A5609B25CA6329007FF176 /* Items */,
 				C29CEF0225C7CC600067C9B8 /* CourseView.swift */,
-				C29FBAB825CBE3BA00E0D488 /* Course.swift */,
 				C2A560A725CA63DF007FF176 /* CourseList.swift */,
 				C25BEB1525C674AB007316DF /* Assets.xcassets */,
 			);
@@ -110,6 +110,14 @@
 				C25BEB2525C674AB007316DF /* macOS.entitlements */,
 			);
 			path = macOS;
+			sourceTree = "<group>";
+		};
+		C29FBABF25CBEE8400E0D488 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				C29FBAB825CBE3BA00E0D488 /* Course.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		C2A5609825CA62DB007FF176 /* Navigation */ = {

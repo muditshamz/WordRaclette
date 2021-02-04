@@ -10,6 +10,8 @@ import SwiftUI
 struct CourseView: View {
     @State var ShowFullCard = false
     @Namespace var namespaceCard
+    @State var selectedItem: Course? = nil
+    @State var isDisabled = false
     var body: some View{
         ZStack {
             ScrollView {
@@ -19,17 +21,38 @@ struct CourseView: View {
                         CourseItem(course: item)
                             .matchedGeometryEffect(id: item.id, in: namespaceCard, isSource: !ShowFullCard)
                             .frame(width: 335, height: 250, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                            
+                            .onTapGesture {
+                                //This solves the problem of animation delay
+                                withAnimation(.spring()) {
+                                    ShowFullCard.toggle()
+                                    selectedItem = item
+                                    isDisabled = true
+                                }
+                            }
+                            .disabled(isDisabled)
                     }
                    
                 }
                 .frame(maxWidth: .infinity)
             }
             
-            if ShowFullCard {
+            if selectedItem != nil {
                 ScrollView {
-                    CourseItem()
-                        .matchedGeometryEffect(id: courses[0].id, in: namespaceCard)
+                    CourseItem(course: selectedItem!)
+                        .matchedGeometryEffect(id: selectedItem!.id, in: namespaceCard)
                         .frame(height: 300)
+                        .onTapGesture {
+                            //This solves the problem of animation delay
+                            withAnimation(.spring()) {
+                                ShowFullCard.toggle()
+                                selectedItem = nil
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                    isDisabled = false
+                                }
+                                
+                            }
+                        }
                     
                     VStack {
                         ForEach(0 ..< 20) { item in
@@ -51,12 +74,6 @@ struct CourseView: View {
                             .animation(.spring()))
                 )
                 .edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
-            }
-        }
-        .onTapGesture {
-            //This solves the problem of animation delay
-            withAnimation(.spring()) {
-                ShowFullCard.toggle()
             }
         }
         //        .animation(.spring()) this delays the animation and back card get visible
