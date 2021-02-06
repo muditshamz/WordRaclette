@@ -14,59 +14,79 @@ struct CourseView: View {
     @State var isDisabled = false
     var body: some View{
         ZStack {
-            ScrollView() {
-                LazyVGrid(
-                    columns : [GridItem(.adaptive(minimum: 160),spacing: 16) ],
-                spacing : 16 ) {
-                    ForEach(courses) { item in
-                        VStack {
-                            CourseItem(course: item)
-                                .matchedGeometryEffect(id: item.id, in: namespaceCard, isSource: !ShowFullCard)
-                                .frame(  height: 200  , alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                                
-                                .onTapGesture {
-                                    //This solves the problem of animation delay
-                                    withAnimation(.spring(response: 0.5 , dampingFraction: 0.7, blendDuration: 0)) {
-                                        ShowFullCard.toggle()
-                                        selectedItem = item
-                                        isDisabled = true
-                                    }
-                                }
-                                .disabled(isDisabled)
-                        }
-                        .matchedGeometryEffect(id: "container\(item.id)", in: namespaceCard, isSource: !ShowFullCard)
-                    }
-                    
-                }
-                .padding(16)
-                .frame(maxWidth: .infinity)
-            }
-            .zIndex(/*@START_MENU_TOKEN@*/1.0/*@END_MENU_TOKEN@*/)
+            #if os(iOS)
+            content
+                .navigationBarHidden(true)
+            //       Full Screen
+            fullContent
+                .background(VisualEffectBlur(blurStyle: .systemThinMaterial).edgesIgnoringSafeArea(.all))
             
-//       Full Screen
-            if selectedItem != nil {
-                ZStack (alignment: .topTrailing){
-                    
-                    CoursesDetails(course: selectedItem! , namespaceCard: namespaceCard)
-                    
-                    
-                    CloseButton()
-                        .padding(.trailing,16)
-                        .onTapGesture {
-                            //This solves the problem of animation delay
-                            withAnimation(.spring()) {
-                                ShowFullCard.toggle()
-                                selectedItem = nil
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                    isDisabled = false
+            #else
+            content
+            //       Full Screen
+            fullContent
+                .background(VisualEffectBlur().edgesIgnoringSafeArea(.all))
+            #endif
+        }
+        .navigationTitle("Courses")
+    }
+    var content: some View{
+        ScrollView() {
+            LazyVGrid(
+                columns : [GridItem(.adaptive(minimum: 160),spacing: 16) ],
+            spacing : 16 ) {
+                ForEach(courses) { item in
+                    VStack {
+                        CourseItem(course: item)
+                            .matchedGeometryEffect(id: item.id, in: namespaceCard, isSource: !ShowFullCard)
+                            .frame(  height: 200  , alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                            .onTapGesture {
+                                //This solves the problem of animation delay
+                                withAnimation(.spring(response: 0.5 , dampingFraction: 0.7, blendDuration: 0)) {
+                                    ShowFullCard.toggle()
+                                    selectedItem = item
+                                    isDisabled = true
                                 }
                             }
-                        }
+                            .disabled(isDisabled)
+                    }
+                    .matchedGeometryEffect(id: "container\(item.id)", in: namespaceCard, isSource: !ShowFullCard)
                 }
-                .zIndex(2)
+                
             }
+            .padding(16)
+            .frame(maxWidth: .infinity)
         }
-        //        .animation(.spring()) this delays the animation and back card get visible
+        .zIndex(/*@START_MENU_TOKEN@*/1.0/*@END_MENU_TOKEN@*/)
+    }
+    
+    
+    @ViewBuilder
+    var fullContent : some View{
+        if selectedItem != nil {
+            ZStack (alignment: .topTrailing){
+                
+                CoursesDetails(course: selectedItem! , namespaceCard: namespaceCard)
+                
+                
+                CloseButton()
+                    .padding(16)
+                    .onTapGesture {
+                        //This solves the problem of animation delay
+                        withAnimation(.spring()) {
+                            ShowFullCard.toggle()
+                            selectedItem = nil
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                isDisabled = false
+                            }
+                        }
+                    }
+            }
+            .zIndex(2)
+            .frame(maxWidth: 712)
+            .frame(maxWidth:.infinity)
+            
+        }
     }
     
 }
